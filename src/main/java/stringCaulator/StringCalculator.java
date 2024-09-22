@@ -1,29 +1,27 @@
 package stringCaulator;
 
-import java.util.Scanner;
-
 public class StringCalculator {
+
+    private final InputProvider inputProvider;
 
     private final String INPUT_SEPARATOR = " ";
 
-    public String input() {
-        Scanner scanner = new Scanner(System.in);
-
-        return scanner.nextLine();
+    public StringCalculator(InputProvider inputProvider) {
+        this.inputProvider = inputProvider;
     }
 
-    public int calculate(String input) {
+    public int calculate() {
+        String input = inputProvider.getInput();
+
         String[] strArr = splitInput(input);
 
-        int firstNum = Integer.parseInt(strArr[0]);
-
-        int result = firstNum;
+        int result = Integer.parseInt(strArr[0]);
 
         for (int i = 1; i < strArr.length; i += 2) {
             String operation = strArr[i];
             int nextNum = Integer.parseInt(strArr[i + 1]);
 
-            result = getResult(result, operation, nextNum);
+            result = applyOperation(result, operation, nextNum);
         }
 
         return result;
@@ -37,7 +35,7 @@ public class StringCalculator {
         return input.split(INPUT_SEPARATOR);
     }
 
-    private int getResult(int result, String operation, int nextNum) {
+    private int applyOperation(int result, String operation, int nextNum) {
         switch (operation) {
             case "+":
                 return result + nextNum;

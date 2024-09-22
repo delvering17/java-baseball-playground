@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import stringCaulator.StringCalculator;
+import stringCaulator.StringInputProvider;
 
 import java.util.Scanner;
 
@@ -11,35 +12,28 @@ import static org.assertj.core.api.Assertions.*;
 
 public class StringCalculatorTest {
 
-    StringCalculator calculator;
-
-    @BeforeEach
-    void setUp() {
-        calculator = new StringCalculator();
-    }
-
-
     @Test
     void calculateTest() {
-        testCalculator("1 + 2", 3);
-        testCalculator("10 - 2", 8);
-        testCalculator("12 * 5", 60);
-        testCalculator("20 / 5", 4);
-        testCalculator("1 + 2 - 3 * 4 / 5", 0);
-        testCalculator("10 + 2 - 3 * 4 / 8", 4);
+        assertThat(calculateInput("1 + 2")).isEqualTo(3);
+        assertThat(calculateInput("10 - 2")).isEqualTo(8);
+        assertThat(calculateInput("12 * 5")).isEqualTo(60);
+        assertThat(calculateInput("20 / 5")).isEqualTo(4);
+        assertThat(calculateInput("1 + 2 - 3 * 4 / 5")).isEqualTo(0);
+        assertThat(calculateInput("10 + 2 - 3 * 4 / 8")).isEqualTo(4);
     }
 
     @Test
     void notSupportedOperationTest() {
         assertThatThrownBy(() ->
-                calculator.calculate("1 % 2")
+                calculateInput("1 % 2")
         ).isInstanceOf(IllegalArgumentException.class);
     }
 
-    private void testCalculator(String input, int expected) {
-        int result = calculator.calculate(input);
+    private int calculateInput(String input) {
+        StringInputProvider inputProvider = new StringInputProvider(input);
+        StringCalculator calculator = new StringCalculator(inputProvider);
 
-        assertThat(result).isEqualTo(expected);
+        return calculator.calculate();
     }
 
 }
